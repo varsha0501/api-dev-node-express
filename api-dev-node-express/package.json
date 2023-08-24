@@ -1,5 +1,5 @@
 {
-  "name": "api-development",
+  "name": "api-dev-node-express",
   "version": "1.0.0",
   "description": "Test Project for API Development",
   "main": "server.js",
