@@ -8,7 +8,7 @@ require("dotenv").config();
 const express = require("express");
 const app = express();
 const hotelRouter =  require("./routes/hotels") ;
-const PORT = process.env.PORT;
+const PORT = process.env.PORT  || 8081 ;
 
 console.log({PORT});
 
