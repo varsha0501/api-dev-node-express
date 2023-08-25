@@ -9,6 +9,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const app = express();
 const hotelRouter =  require("./routes/hotels") ;
+const userRouter =  require("./routes/users") ;
 
 const PORT = process.env.PORT  || 8081 ;
 console.log({PORT});
@@ -26,6 +27,7 @@ app.use(logger);
 app.use(express.json());
 console.log("hotel route file", require("./routes/hotels"));
 app.use("/hotels", hotelRouter);
+app.use("/users", userRouter);
 
 // app.get("/about-us",(req,res)=>{    
 //     res.send("About Us!")
