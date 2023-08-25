@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-
+const jwt = require("jsonwebtoken");
 const Hotel = require("../models/hotels");
 
 // JSON removed as now data will be fetch from database
@@ -33,6 +33,26 @@ const Hotel = require("../models/hotels");
 //     }
 // ]
 
+// works as a function / middleware
+const verifyToken = (req, res, next) => {
+    console.log(req.headers);
+    const authHeader = req.headers.authorization;
+    // if auth header is not there 
+    if(!authHeader){
+        next(); 
+        return;
+    }
+    const parseJWT = jwt.verify(authHeader, process.env.JWT_SECRET);
+    req.user={
+        email : parseJWT.email,
+        role : parseJWT.role
+    };
+    console.log(parseJWT);
+    next();
+}
+
+router.use(verifyToken); // want to accessible to all routers
+
 router.get("/",async(req,res)=>{ //  /hotels --> removed  /hotels | added into server.js router line no 33
     // both will work - ideally we use json that means will receive json
     //res.send(hotels)
@@ -53,10 +73,16 @@ router.get("/:id",async(req,res)=>{  //  /hotels/:id --> removed  /hotels | adde
 // create hotel
 router.post("/",async(req,res)=>{
     const hotel = req.body;
-    const createHotel = await Hotel.create(hotel);
+    const user = req.user;
+    if(user.role == "SUPER_ADMIN"){
+        const createHotel = await Hotel.create(hotel);
+        res.send(createHotel);
+    }
+    else{
+        res.status(403).send({message:"Unauthorized"});
+    }
     // hotel.id = hotels.length + 1;
-    // hotels.push(hotel);
-    res.send(createHotel);
+    // hotels.push(hotel);    
 }); // have to mention app.use(express.json()) before creating hotel 
 
 // update hotel
