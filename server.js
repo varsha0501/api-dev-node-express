@@ -6,11 +6,16 @@
 
 require("dotenv").config();
 const express = require("express");
+const mongoose = require("mongoose");
 const app = express();
 const hotelRouter =  require("./routes/hotels") ;
-const PORT = process.env.PORT  || 8081 ;
 
+const PORT = process.env.PORT  || 8081 ;
 console.log({PORT});
+
+mongoose.connect(process.env.MONGO_URL).then(()=>{
+    console.log('Conncted to MongoDB');
+})
 
 const logger = (req, res, next) => {
     console.log(`${req.method}: Request received on ${req.url}`);
